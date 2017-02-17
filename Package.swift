@@ -24,6 +24,14 @@ let package = Package(
         .Package(
             url: "https://github.com/PerfectlySoft/Perfect-MySQL.git",
             versions: Version(0,0,0) ..< Version(10,0,0)
+        ),
+        .Package(
+            url: "https://github.com/valentinbercot/VabeArchitecture.git",
+            versions: Version(0,0,0) ..< Version(10,0,0)
+        ),
+        .Package(
+            url: "https://github.com/valentinbercot/VabeMySQL.git",
+            versions: Version(0,0,0) ..< Version(10,0,0)
         )
     ],
     exclude: []
