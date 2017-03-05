@@ -12,11 +12,11 @@ import VBPerfectArchitecture
 import VBPerfectEntities
 import VBPerfectMySQL
 
-class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
+public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
 {
     let keys = UserKeys.sharedInstance
     
-    func count(identifiers: [String: Any]?) throws -> UInt64
+    public func count(identifiers: [String: Any]?) throws -> UInt64
     {
         guard identifiers != nil && !identifiers!.isEmpty else
         {
@@ -52,7 +52,7 @@ class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         return count
     }
     
-    func list(identifiers: [String: Any]?, options: VBPerfectStoreOptions) throws -> [Any]?
+    public func list(identifiers: [String: Any]?, options: VBPerfectStoreOptions) throws -> [Any]?
     {
         guard identifiers != nil && !identifiers!.isEmpty else
         {
@@ -127,7 +127,7 @@ class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         return users
     }
     
-    func retrieve(identifiers: [String: Any]) throws -> Any?
+    public func retrieve(identifiers: [String: Any]) throws -> Any?
     {
         guard identifiers.count != 1 && identifiers[keys.email] != nil else
         {
@@ -175,7 +175,7 @@ class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         }
     }
     
-    func create(identifiers: [String: Any]?, ressource: Any) throws
+    public func create(identifiers: [String: Any]?, ressource: Any) throws
     {
         guard identifiers != nil && !identifiers!.isEmpty else
         {
@@ -200,7 +200,7 @@ class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         }
     }
     
-    func update(identifiers: [String: Any], ressource: Any) throws
+    public func update(identifiers: [String: Any], ressource: Any) throws
     {
         guard identifiers.count != 1 && identifiers[keys.email] != nil else
         {
@@ -226,7 +226,7 @@ class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         }
     }
     
-    func delete(identifiers: [String: Any]) throws
+    public func delete(identifiers: [String: Any]) throws
     {
         guard identifiers.count != 1 && identifiers[keys.email] != nil else
         {
