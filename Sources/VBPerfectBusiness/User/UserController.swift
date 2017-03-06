@@ -56,7 +56,27 @@ public class UserController: VBPerfectRessourceController
     {
         if let output = output as? VBPerfectRessourceInteractor
         {
-            output.fetchRetrieve(identifiers: nil, response: response)
+            var identifiers = [String: String]()
+            
+            if !supportedMediaTypeAccept(request: request) || !supportedMediaTypeAcceptCharset(request: request) || !supportedMediaTypeAcceptEncoding(request: request)
+            {
+                response.status = .notAcceptable
+            }
+            else
+            {
+                if let userId = request.urlVariables[UserConfigurator.sharedInstance.id]
+                {
+                    identifiers[UserConfigurator.sharedInstance.id] = userId
+                }
+                else
+                {
+                    Log.error(message: "Id empty")
+                    
+                    response.status = .badRequest
+                }
+            }
+            
+            output.fetchRetrieve(identifiers: identifiers, response: response)
         }
         else
         {

@@ -49,7 +49,7 @@ class UserInteractor: VBPerfectRessourceInteractor
                     {
                         Log.error(message: "\(VBPerfectStoreError.notFound(identifier: UserKeys.sharedInstance.className))")
                         
-                        response.status = .notFound
+                        response.status = .noContent
                     }
                 }
                 catch
@@ -72,7 +72,30 @@ class UserInteractor: VBPerfectRessourceInteractor
     {
         if let output = output as? VBPerfectRessourcePresenter
         {
-            output.presentRetrieve(ressource: nil, response: response)
+            var user: User?
+            
+            if ok(response: response)
+            {
+                do
+                {
+                    if let userDatabase = try worker!.retrieve(identifiers: identifiers!) as? User
+                    {
+                        user = userDatabase
+                    }
+                    else
+                    {
+                        response.status = .notFound
+                    }
+                }
+                catch
+                {
+                    Log.error(message: "\(error)")
+                    
+                    response.status = .internalServerError
+                }
+            }
+            
+            output.presentRetrieve(ressource: user, response: response)
         }
         else
         {
