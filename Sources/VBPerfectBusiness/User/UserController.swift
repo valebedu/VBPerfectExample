@@ -10,6 +10,7 @@ import Foundation
 import PerfectHTTP
 import PerfectLib
 import VBPerfectArchitecture
+import VBPerfectEntities
 
 public class UserController: VBPerfectRessourceController
 {
@@ -88,7 +89,49 @@ public class UserController: VBPerfectRessourceController
     {
         if let output = output as? VBPerfectRessourceInteractor
         {
-            output.fetchCreate(identifiers: nil, ressource: nil, response: response)
+            var user: User?
+            
+            if !supportedMediaTypeAcceptCharset(request: request) || !supportedMediaTypeAcceptEncoding(request: request)
+            {
+                response.status = .notAcceptable
+            }
+            else if !supportedMediaTypeContentType(request: request)
+            {
+                response.status = .unsupportedMediaType
+            }
+            else
+            {
+                do
+                {
+                    if let body = try request.postBodyString?.jsonDecode() as? [String: Any]
+                    {
+                        do
+                        {
+                            user = try User(body: body)
+                        }
+                        catch
+                        {
+                            Log.error(message: "\(error)")
+                            
+                            response.status = .badRequest
+                        }
+                    }
+                    else
+                    {
+                        Log.error(message: "Post body empty")
+                        
+                        response.status = .badRequest
+                    }
+                }
+                catch
+                {
+                    Log.error(message: "\(error)")
+                    
+                    response.status = .badRequest
+                }
+            }
+            
+            output.fetchCreate(identifiers: nil, ressource: user, response: response)
         }
         else
         {

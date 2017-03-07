@@ -41,7 +41,7 @@ class UserInteractor: VBPerfectRessourceInteractor
             {
                 do
                 {
-                    if let usersDatabase = try worker!.list(identifiers: identifiers, options: options) as? [User]
+                    if let usersDatabase = try worker!.list(identifiers: nil, options: options) as? [User]
                     {
                         users = usersDatabase
                     }
@@ -107,6 +107,31 @@ class UserInteractor: VBPerfectRessourceInteractor
     {
         if let output = output as? VBPerfectRessourcePresenter
         {
+            if ok(response: response)
+            {
+                if let user = ressource as? User
+                {
+                    do
+                    {
+                        try worker!.create(identifiers: nil, ressource: user)
+                        
+                        response.status = .created
+                    }
+                    catch
+                    {
+                        Log.error(message: "\(error)")
+                        
+                        response.status = .internalServerError
+                    }
+                }
+                else
+                {
+                    Log.error(message: "Should be throw before")
+                    
+                    response.status = .internalServerError
+                }
+            }
+            
             output.presentCreate(ressource: nil, response: response)
         }
         else
