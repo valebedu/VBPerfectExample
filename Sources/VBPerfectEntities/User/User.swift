@@ -10,6 +10,8 @@ import Foundation
 
 public struct User: Entity
 {
+    private let keys = UserKeys.sharedInstance
+    
     public var email: String
     public var password: String
     public var firstName: String
@@ -26,5 +28,20 @@ public struct User: Entity
         self.lastName = lastName
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+    }
+    
+    public init (body: [String: Any]) throws
+    {
+        if let email = body[keys.email] as? String, let password = body[keys.password] as? String, let firstName = body[keys.firstName] as? String, let lastName = body[keys.lastName] as? String
+        {
+            self.email = email
+            self.password = password
+            self.firstName = firstName
+            self.lastName = lastName
+        }
+        else
+        {
+            throw EntityError.parsingFailed(body: body)
+        }
     }
 }
