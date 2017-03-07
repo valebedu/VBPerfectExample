@@ -143,7 +143,52 @@ public class UserController: VBPerfectRessourceController
     {
         if let output = output as? VBPerfectRessourceInteractor
         {
-            output.fetchUpdate(identifiers: nil, ressource: nil, response: response)
+            var identifiers = [String: String]()
+            var user: User?
+            
+            if !supportedMediaTypeAcceptCharset(request: request) || !supportedMediaTypeAcceptEncoding(request: request)
+            {
+                response.status = .notAcceptable
+            }
+            else if !supportedMediaTypeContentType(request: request)
+            {
+                response.status = .unsupportedMediaType
+            }
+            else
+            {
+                do
+                {
+                    if let userId = request.urlVariables[UserConfigurator.sharedInstance.id], let body = try request.postBodyString?.jsonDecode() as? [String: Any]
+                    {
+                        identifiers[UserConfigurator.sharedInstance.id] = userId
+                        
+                        do
+                        {
+                            user = try User(body: body)
+                        }
+                        catch
+                        {
+                            Log.error(message: "\(error)")
+                            
+                            response.status = .badRequest
+                        }
+                    }
+                    else
+                    {
+                        Log.error(message: "Id empty AND/OR body empty")
+                        
+                        response.status = .badRequest
+                    }
+                }
+                catch
+                {
+                    Log.error(message: "\(error)")
+                    
+                    response.status = .badRequest
+                }
+            }
+            
+            output.fetchUpdate(identifiers: identifiers, ressource: user, response: response)
         }
         else
         {

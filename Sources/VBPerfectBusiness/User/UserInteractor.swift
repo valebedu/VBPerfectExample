@@ -144,7 +144,34 @@ class UserInteractor: VBPerfectRessourceInteractor
     {
         if let output = output as? VBPerfectRessourcePresenter
         {
-            output.presentUpdate(ressource: nil, response: response)
+            let user = ressource as? User
+            
+            if ok(response: response)
+            {
+                if user != nil
+                {
+                    do
+                    {
+                        try worker!.update(identifiers: identifiers!, ressource: user!)
+                        
+                        response.status = .created
+                    }
+                    catch
+                    {
+                        Log.error(message: "\(error)")
+                        
+                        response.status = .internalServerError
+                    }
+                }
+                else
+                {
+                    Log.error(message: "Should be throw before")
+                    
+                    response.status = .internalServerError
+                }
+            }
+            
+            output.presentUpdate(ressource: user, response: response)
         }
         else
         {
