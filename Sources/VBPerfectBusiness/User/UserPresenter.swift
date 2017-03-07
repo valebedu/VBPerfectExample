@@ -153,6 +153,32 @@ class UserPresenter: VBPerfectRessourcePresenter
     {
         if let output = output as? VBPerfectRessourceController
         {
+            if ok(response: response)
+            {
+                if let userId = ressource as? String
+                {
+                    let userJson = [UserKeys.sharedInstance.email:userId]
+                    
+                    do
+                    {
+                        try response.setBody(string: userJson.jsonEncodedString())
+                        
+                        response.setHeader(.contentType, value: "application/json")
+                        response.status = .ok
+                    }
+                    catch
+                    {
+                        Log.error(message: "\(error)")
+                        
+                        response.status = .internalServerError
+                    }
+                }
+                else
+                {
+                    response.status = .notFound
+                }
+            }
+            
             output.displayDelete(response: response)
         }
         else

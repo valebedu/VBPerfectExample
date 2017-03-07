@@ -44,6 +44,8 @@ class UserInteractor: VBPerfectRessourceInteractor
                     if let usersDatabase = try worker!.list(identifiers: nil, options: options) as? [User]
                     {
                         users = usersDatabase
+                        
+                        response.status = .ok
                     }
                     else
                     {
@@ -81,6 +83,8 @@ class UserInteractor: VBPerfectRessourceInteractor
                     if let userDatabase = try worker!.retrieve(identifiers: identifiers!) as? User
                     {
                         user = userDatabase
+                        
+                        response.status = .ok
                     }
                     else
                     {
@@ -154,7 +158,7 @@ class UserInteractor: VBPerfectRessourceInteractor
                     {
                         try worker!.update(identifiers: identifiers!, ressource: user!)
                         
-                        response.status = .created
+                        response.status = .ok
                     }
                     catch
                     {
@@ -183,7 +187,23 @@ class UserInteractor: VBPerfectRessourceInteractor
     {
         if let output = output as? VBPerfectRessourcePresenter
         {
-            output.presentDelete(ressource: nil, response: response)
+            if ok(response: response)
+            {
+                do
+                {
+                    try worker!.delete(identifiers: identifiers!)
+                    
+                    response.status = .ok
+                }
+                catch
+                {
+                    Log.error(message: "\(error)")
+                    
+                    response.status = .internalServerError
+                }
+            }
+            
+            output.presentDelete(ressource: identifiers![UserConfigurator.sharedInstance.id], response: response)
         }
         else
         {
