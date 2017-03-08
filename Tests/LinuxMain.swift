@@ -1,14 +1,14 @@
 //
 //  LinuxMain.swift
-//  VabeExample
+//  VBPerfectExample
 //
 //  Created by Valentin Bercot on 17/02/2017.
 //
 //
 
 import XCTest
-@testable import VabeExampleTests
+@testable import VBPerfectExampleTests
 
 XCTMain([
-     testCase(VabeExampleTests.allTests)
+     testCase(VBPerfectExampleTests.allTests)
 ])

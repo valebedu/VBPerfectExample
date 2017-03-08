@@ -1,0 +1,23 @@
+version: '2.0'
+
+services:
+    perfect:
+        container_name: "perfect"
+        image: "valentinbercot/perfect:2.0"
+        env_file: ".env"
+        volumes:
+            - "${PERFECT_SOURCE_PATH}/${PERFECT_SOURCE_REPOSITORY}:${PERFECT_TARGET_PATH}/${PERFECT_TARGET_REPOSITORY}"
+        ports:
+            - "8181:8181"
+        entrypoint: "${PERFECT_TARGET_PATH}/${PERFECT_TARGET_REPOSITORY}/Docker/docker-entrypoint.sh"
+        links:
+            - "database"
+
+    database:
+        container_name: "mysql"
+        image: "mysql"
+        env_file: ".env"
+        volumes:
+            - "${DB_SOURCE_PATH}/${DB_SOURCE_REPOSITORY}:${DB_TARGET_PATH}/${DB_TARGET_REPOSITORY}"
+        ports:
+            - "3306:3306"
