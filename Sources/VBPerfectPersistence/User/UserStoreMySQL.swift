@@ -18,9 +18,9 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func count(identifiers: [String: Any]?) throws -> UInt64
     {
-        guard identifiers != nil && !identifiers!.isEmpty else
+        guard identifiers == nil || identifiers?.count == 0 else
         {
-            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers!, expected: 0)
+            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 0)
         }
         
         let query = "SELECT COUNT(*) " +
@@ -54,9 +54,9 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func list(identifiers: [String: Any]?, options: VBPerfectStoreOptions) throws -> [Any]?
     {
-        guard identifiers != nil && !identifiers!.isEmpty else
+        guard identifiers == nil || identifiers?.count == 0 else
         {
-            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers!, expected: 0)
+            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 0)
         }
         
         var query = "SELECT * " +
@@ -129,14 +129,14 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func retrieve(identifiers: [String: Any]) throws -> Any?
     {
-        guard identifiers.count != 1 && identifiers[keys.email] != nil else
+        guard let email = identifiers[keys.email] else
         {
             throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 1)
         }
         
         let query = "SELECT * " +
             "FROM \(keys.className) " +
-        "WHERE \(keys.email) = \"\(identifiers[keys.email])\""
+        "WHERE \(keys.email) = \"\(email)\";"
         
         let success = mySql.query(statement: query)
         
@@ -177,9 +177,9 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func create(identifiers: [String: Any]?, ressource: Any) throws
     {
-        guard identifiers != nil && !identifiers!.isEmpty else
+        guard identifiers == nil || identifiers?.count == 0 else
         {
-            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers!, expected: 0)
+            throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 0)
         }
         
         guard let user = ressource as? User else
@@ -202,7 +202,7 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func update(identifiers: [String: Any], ressource: Any) throws
     {
-        guard identifiers.count != 1 && identifiers[keys.email] != nil else
+        guard let email = identifiers[keys.email] else
         {
             throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 1)
         }
@@ -216,7 +216,7 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
         
         let query = "UPDATE \(keys.className) " +
             "SET \(keys.email) = \"\(user.email)\", \(keys.password) = \"\(user.password)\", \(keys.firstName) = \"\(user.firstName)\", \(keys.lastName) = \"\(user.lastName)\", \(keys.updatedAt) = \"\(dateFormatter.string(from: updatedDate))\" " +
-        "WHERE email = \"\(identifiers[keys.email])\";"
+        "WHERE email = \"\(email)\";"
         
         let success = mySql.query(statement: query)
         
@@ -228,13 +228,13 @@ public class UserStoreMySQL: VBPerfectStoreMySQL, VBPerfectStoreDatabase
     
     public func delete(identifiers: [String: Any]) throws
     {
-        guard identifiers.count != 1 && identifiers[keys.email] != nil else
+        guard let email = identifiers[keys.email] else
         {
             throw VBPerfectStoreError.identifiersNotExpected(identifiers: identifiers, expected: 1)
         }
         
         let query = "DELETE FROM \(keys.className) " +
-        "WHERE \(keys.email) = \"\(identifiers[keys.email])\";"
+        "WHERE \(keys.email) = \"\(email)\";"
         
         let success = mySql.query(statement: query)
         
