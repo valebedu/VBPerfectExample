@@ -8,6 +8,7 @@
 
 import VBPerfectArchitecture
 import VBPerfectMySQL
+import VBPerfectEntities
 
 public class UserConfigurator: VBPerfectConfigurator
 {
@@ -15,7 +16,7 @@ public class UserConfigurator: VBPerfectConfigurator
     
     public let mySqlConfigurator = VBPerfectStoreMySQLConfigurator(host: "127.0.0.1", user: "root", password: "root", database: "EXAMPLE")
     public let endpoint = "users"
-    public let id = "user"
+    public let id = UserKeys.sharedInstance.email
     
     private init() {}
     
