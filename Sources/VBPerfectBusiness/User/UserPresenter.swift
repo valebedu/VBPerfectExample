@@ -23,26 +23,33 @@ class UserPresenter: VBPerfectRessourcePresenter
             {
                 if let users = ressources as? [User]
                 {
-                    var usersJson = [UserJSON]()
-                    
-                    users.forEach({
-                        user in
-                        
-                        usersJson.append(UserJSON(user: user))
-                    })
-                    
-                    do
+                    if users.isEmpty
                     {
-                        try response.setBody(string: usersJson.jsonEncodedString())
-                        
-                        response.setHeader(.contentType, value: "application/json")
-                        response.status = .ok
+                        response.status = .noContent
                     }
-                    catch
+                    else
                     {
-                        Log.error(message: "\(error)")
+                        var usersJson = [UserJSON]()
                         
-                        response.status = .internalServerError
+                        users.forEach({
+                            user in
+                            
+                            usersJson.append(UserJSON(user: user))
+                        })
+                        
+                        do
+                        {
+                            try response.setBody(string: usersJson.jsonEncodedString())
+                            
+                            response.setHeader(.contentType, value: "application/json")
+                            response.status = .ok
+                        }
+                        catch
+                        {
+                            Log.error(message: "\(error)")
+                            
+                            response.status = .internalServerError
+                        }
                     }
                 }
                 else
