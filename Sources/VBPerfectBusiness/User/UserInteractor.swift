@@ -54,6 +54,20 @@ class UserInteractor: VBPerfectRessourceInteractor
                         response.status = .noContent
                     }
                 }
+                catch let error as VBPerfectStoreError
+                {
+                    Log.error(message: "\(error)")
+                    
+                    switch error
+                    {
+                    case .alreadyExist:
+                        response.status = .notAcceptable
+                    case .identifiersNotExpected, .ressourceNotExpected:
+                        response.status = .badRequest
+                    default:
+                        response.status = .internalServerError
+                    }
+                }
                 catch
                 {
                     Log.error(message: "\(error)")
@@ -91,6 +105,20 @@ class UserInteractor: VBPerfectRessourceInteractor
                         response.status = .notFound
                     }
                 }
+                catch let error as VBPerfectStoreError
+                {
+                    Log.error(message: "\(error)")
+                    
+                    switch error
+                    {
+                    case .alreadyExist:
+                        response.status = .notAcceptable
+                    case .identifiersNotExpected, .ressourceNotExpected:
+                        response.status = .badRequest
+                    default:
+                        response.status = .internalServerError
+                    }
+                }
                 catch
                 {
                     Log.error(message: "\(error)")
@@ -120,6 +148,20 @@ class UserInteractor: VBPerfectRessourceInteractor
                         try worker!.create(identifiers: nil, ressource: user)
                         
                         response.status = .created
+                    }
+                    catch let error as VBPerfectStoreError
+                    {
+                        Log.error(message: "\(error)")
+                        
+                        switch error
+                        {
+                        case .alreadyExist:
+                            response.status = .notAcceptable
+                        case .identifiersNotExpected, .ressourceNotExpected:
+                            response.status = .badRequest
+                        default:
+                            response.status = .internalServerError
+                        }
                     }
                     catch
                     {
@@ -160,6 +202,20 @@ class UserInteractor: VBPerfectRessourceInteractor
                         
                         response.status = .ok
                     }
+                    catch let error as VBPerfectStoreError
+                    {
+                        Log.error(message: "\(error)")
+                        
+                        switch error
+                        {
+                        case .alreadyExist:
+                            response.status = .notAcceptable
+                        case .identifiersNotExpected, .ressourceNotExpected:
+                            response.status = .badRequest
+                        default:
+                            response.status = .internalServerError
+                        }
+                    }
                     catch
                     {
                         Log.error(message: "\(error)")
@@ -194,6 +250,20 @@ class UserInteractor: VBPerfectRessourceInteractor
                     try worker!.delete(identifiers: identifiers!)
                     
                     response.status = .ok
+                }
+                catch let error as VBPerfectStoreError
+                {
+                    Log.error(message: "\(error)")
+                    
+                    switch error
+                    {
+                    case .alreadyExist:
+                        response.status = .notAcceptable
+                    case .identifiersNotExpected, .ressourceNotExpected:
+                        response.status = .badRequest
+                    default:
+                        response.status = .internalServerError
+                    }
                 }
                 catch
                 {
